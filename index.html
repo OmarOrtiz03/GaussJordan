@@ -25,27 +25,20 @@
           <th>
             <table id="matgj">
               <tr>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
+                 <td><input name="mat" placeholder="0" onkeypress="return error(event);"></td>
+                 <td><input name="mat" placeholder="0" onkeypress="return error(event);"></td>
                 </tr>
                <tr>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
-               </tr>
-               <tr>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
-                 <td><input name="mat" placeholder="0"></td>
+                 <td><input name="mat" placeholder="0" onkeypress="return error(event);"></td>
+                 <td><input name="mat" placeholder="0" onkeypress="return error(event);"></td>
                </tr>
            </table>
           </th>
-            <th><button onclick='reduceColumna()'><span>Reduce columna</span></button></th>
+            <th><button onclick='reduceColumna()' id="reduccionc" hidden><span>Reduce columna</span></button></th>
             <th><button onclick='añadeColumna()'><span>Añadir columna</span></button></th>
           </tr>
           <tr>
-            <td><button onclick='reduceFila()'><span>Reduce Fila</span></button></td>
+            <td><button onclick='reduceFila()' id="reduccionf" hidden><span>Reduce Fila</span></button></td>
           </tr>
           <tr><td><button onclick='agñadeFila()'><span>Añadir Fila</span></td></tr>
       </table>
@@ -54,27 +47,20 @@
       <br/>
       <br/>
       <label name="Gauss Jordan" hidden>Gauss Jordan</label>
+      <label id="error" hidden>No se permite el uso de simbolos, letras o caracteres especiales</label>
       <br/>
       <br/>
       <table  id="resgj" name="Gauss Jordan" hidden>
         <tr>
            <td><label name="res">1</label></td>
            <td><label name="res">0</label></td>
-           <td><label name="res">0</label></td>
           </tr>
          <tr>
-           <td><label name="res">0</label></td>
-           <td><label name="res">1</label></td>
-           <td><label name="res">0</label></td>
-         </tr>
-         <tr>
-           <td><label name="res">0</label></td>
            <td><label name="res">0</label></td>
            <td><label name="res">1</label></td>
          </tr>
      </table>
     </div>
-    
   </div>
 </body>
 </html>
