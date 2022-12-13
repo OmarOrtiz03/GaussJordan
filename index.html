@@ -18,7 +18,7 @@
 <center>
 <body>
   <h1 id="p-principal">Calculadora de Gauss Jordan</h1>
-  <div class="container">
+  <div class="container" id="contenedor" ondragover="arrastre(event)" ondrop="soltar(event)">
     <div class="table">
       <table>
         <tr>
@@ -43,11 +43,12 @@
           <tr><td><button onclick='agñadeFila()'><span>Añadir Fila</span></td></tr>
       </table>
       <br/>
-      <button onclick="Calcular()">Calcular</button></button>
+      <button onclick="limpiar()">limpiar</button>
+      <br/>
+      <button onclick="Calcular()">Calcular</button>
       <br/>
       <br/>
       <label name="Gauss Jordan" hidden>Gauss Jordan</label>
-      <label id="error" hidden>No se permite el uso de simbolos, letras o caracteres especiales</label>
       <br/>
       <br/>
       <table  id="resgj" name="Gauss Jordan" hidden>
