@@ -1,10 +1,104 @@
 var n=2,m=2;
+// Definimos la matriz
+// Función para encontrar la matriz identidad
+function gaussJ(matriz) {
+    var ban=0;
+    var cont=0;
+    var resultado=document.getElementsByName("res");
+    var inversa=document.getElementsByName("inv");
+    // Creamos la matriz identidad
+    let identidad = new Array(n);
+    for (let i = 0; i < n; i++) {
+      identidad[i] = new Array(m);
+      for (let j = 0; j < m; j++) {
+        if (i == j) {
+          identidad[i][j] = 1;
+        }
+        else {
+          identidad[i][j] = 0;
+        }
+      }
+    }
+    // Aplicamos el método de Gauss-Jordan
+    for (let k = 0; k < n; k++) {
+      ban=0;
+      let pivot = matriz[k][k];
+      // Dividimos la fila k de la matriz original
+      if (pivot==0){
+        for(let q = k+1; q < n; q++) {
+            if(matriz[q][k]>0 && ban==0){
+                for (let r = 0; r < m; r++) {
+                    matriz[k][r] = matriz[k][r] + matriz[q][r];
+                    identidad[k][r] = identidad[k][r] + identidad[q][r];
+                }
+                ban=1;
+            }
+        }
+        if(ban==0){
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < m; j++) {
+                    resultado[cont].innerHTML = matriz[i][j];
+                    //inversa[cont].innerHTML= identidad[i][j];
+                    cont++;
+                }
+            }
+            var inversat=document.getElementById("invt");
+            var inversaa=document.getElementById("inver");
+            inversaa.setAttribute("hidden",true);
+            inversat.innerHTML="No hay inversa";
+            return;
+        }
+        k=-1;
+        continue;
+      }
+      for (let l = 0; l < m; l++) {
+        matriz[k][l] = matriz[k][l] / pivot;
+        identidad[k][l] = identidad[k][l] / pivot;
+      }
+      // Modificamos las demás filas
+      for (let p = 0; p < n; p++) {
+        if (p != k) {
+          let coeficiente = matriz[p][k];
+          for (let l = 0; l < m; l++) {
+            matriz[p][l] = matriz[p][l] - coeficiente * matriz[k][l];
+            identidad[p][l] = identidad[p][l] - coeficiente * identidad[k][l];
+          }
+        }
+      }
+    }
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            resultado[cont].innerHTML = matriz[i][j];
+            inversa[cont].innerHTML= identidad[i][j];
+            cont++;
+        }
+    }
+    // Devolvemos la matriz identidad
+  }
+  
+// Mostramos la matriz identidad
 function Calcular(){
     var matg=new Array();
     var cont=0;
     var gauss=document.getElementsByName("Gauss Jordan");
     for(var i=0;i<gauss.length;i++){
         gauss[i].removeAttribute("hidden");
+    }
+    if (n==m){
+        var inversatt=document.getElementById("invt");
+        var inversa=document.getElementById("inver");
+        inversa.removeAttribute("hidden");
+        inversatt.innerHTML="Inversa";
+    }
+    else{
+        var inversat=document.getElementById("invt");
+        var inversaa=document.getElementById("inver");
+        inversaa.setAttribute("hidden",true);
+        inversat.innerHTML="No hay inversa";
+    }
+    var error=document.getElementsByName("mat");
+    for(var i=0;i<error.length;i++){
+        //error[i].value=0;
     }
     for(var i=0;i<n;i++){
         matg[i]=new Array();
@@ -19,23 +113,28 @@ function Calcular(){
             matg[i][j]=parseFloat(matg[i][j]);
         }
     }
+    gaussJ(matg);
 }
 
 
 function agñadeFila(){
-    m++;
-    if(m>2){
+    esconder();
+    n++;
+    if(n>2){
         var comprobar = document.getElementById('reduccionf');
         comprobar.removeAttribute("hidden")
     }
     var matriz=document.getElementById("matgj").firstElementChild;
     var matrizr=document.getElementById("resgj").firstElementChild;
+    var matrizi=document.getElementById("inver").firstElementChild;
     var elementoEntrada = document.createElement('tr');
     var elementoEntradar = document.createElement('tr');
+    var elementoEntradai = document.createElement('tr');
     matriz.appendChild(elementoEntrada);
     matrizr.appendChild(elementoEntradar);
+    matrizi.appendChild(elementoEntradai);
     console.log(matriz.childNodes);
-    for(var i=0;i<n;i++){
+    for(var i=0;i<m;i++){
         //agregar el elemento a cada celda del input
         var elementoTabla=document.createElement('td');
         var element= document.createElement('input');
@@ -51,35 +150,49 @@ function agñadeFila(){
         elementr.setAttribute('name','res');
         elementoTablar.appendChild(elementr);
         elementoEntradar.appendChild(elementoTablar);
+        //agregar el elemento a cada label de la matriz inversa
+        var elementoTablai=document.createElement('td');
+        var elementi= document.createElement('label');
+        elementi.innerHTML =0;
+        elementi.setAttribute('name','inv');
+        elementoTablai.appendChild(elementi);
+        elementoEntradai.appendChild(elementoTablai);
     }
 }
 function reduceFila(){
-    m--;
-    if(m<=2){
+    esconder();
+    n--;
+    if(n<=2){
         var comprobar = document.getElementById('reduccionf');
         comprobar.setAttribute("hidden","true");
     }
     var matriz=document.getElementById("matgj").firstElementChild;
     var matrizr=document.getElementById("resgj").firstElementChild;
+    var matrizi=document.getElementById("inver").firstElementChild;
     if(matriz.lastChild.nodeType==1){
         matriz.removeChild(matriz.lastChild);
         matrizr.removeChild(matrizr.lastChild);
+        matrizi.removeChild(matrizi.lastChild);
     }
     else{
         matriz.removeChild(matriz.lastChild);
         matriz.removeChild(matriz.lastChild);
         matrizr.removeChild(matrizr.lastChild);
         matrizr.removeChild(matrizr.lastChild);
+        matrizi.removeChild(matrizi.lastChild);
+        matrizi.removeChild(matrizi.lastChild);
     }
 }
 function añadeColumna(){
-    n++;
-    if(n>2){
+    esconder();
+    m++;
+    if(m>2){
         var comprobar = document.getElementById('reduccionc');
         comprobar.removeAttribute("hidden")
     }
     var matriz=document.getElementById("matgj").firstElementChild;
     var matrizr=document.getElementById("resgj").firstElementChild;
+    var matrizi=document.getElementById("inver").firstElementChild;
     for (var filas of matriz.childNodes) {
         if(filas.nodeType==1){
             //agregar el elemento a cada celda del input
@@ -103,15 +216,28 @@ function añadeColumna(){
             filasr.appendChild(elementoTablar);
         }
     }
+    for(var filasi of matrizi.childNodes){
+        //agregar el elemento a cada label del resultado
+        if(filasi.nodeType==1){
+            var elementoTablai=document.createElement('td');
+            var elementi= document.createElement('label');
+            elementi.innerHTML = '0';
+            elementi.setAttribute('name','inv');
+            elementoTablai.appendChild(elementi);
+            filasi.appendChild(elementoTablai);
+        }
+    }
 }
 function reduceColumna(){
-    n--;
-    if(n<=2){
+    esconder();
+    m--;
+    if(m<=2){
         var comprobar = document.getElementById('reduccionc');
         comprobar.setAttribute("hidden","true");
     }
-    var matriz=document.getElementById("matgj").firstElementChild;;
+    var matriz=document.getElementById("matgj").firstElementChild;
     var matrizr=document.getElementById("resgj").firstElementChild;
+    var matrizi=document.getElementById("inver").firstElementChild;
     for (var filas of matriz.childNodes) {
        if(filas.nodeType==1){
             filas.removeChild(filas.lastChild);       
@@ -122,6 +248,11 @@ function reduceColumna(){
             filasr.removeChild(filasr.lastChild);         
         }
     }
+    for(var filasi of matrizi.childNodes){
+        if(filasi.nodeType==1){
+            filasi.removeChild(filasi.lastChild);         
+        }
+    }
 }
 function error(evt){
     if(window.event){
@@ -130,7 +261,7 @@ function error(evt){
     else{
         keynum=evt.which;
     }
-    if(keynum>47 && keynum<58 || keynum==46 || keynum==13){
+    if(keynum>47 && keynum<58 || keynum==46 || keynum==13 || keynum==45){
         return true;
     }
     else{
@@ -138,19 +269,29 @@ function error(evt){
         return false;
     }
 }
+function esconder(){
+    var gauss=document.getElementsByName("Gauss Jordan");
+    for(var i=0;i<gauss.length;i++){
+        gauss[i].setAttribute("hidden",true);
+    }
+    var inversaa=document.getElementById("inver");
+    inversaa.setAttribute("hidden",true);
+}
 function limpiar(){
     var limpieza = document.getElementsByName("mat");
-    if(m>2){
-        for(var i=0;i<m-2;i++){
-            reduceFila();
-        }
-        if(m>2) limpiar();
-    }
+    //todo se vuelve a esconder
+    esconder();
     if(n>2){
         for(var i=0;i<n-2;i++){
-            reduceColumna();
+            reduceFila();
         }
         if(n>2) limpiar();
+    }
+    if(m>2){
+        for(var i=0;i<m-2;i++){
+            reduceColumna();
+        }
+        if(m>2) limpiar();
     }
     for (var i=0; i<limpieza.length; i++){
         limpieza[i].value='';
@@ -197,7 +338,10 @@ function soltar(evt){
                 }
             }
             for(var i=0; i<lista.length; i++){
-                lista[i]=parseFloat(lista[i]);
+                if(lista[i]!=0){
+                    lista[i]=parseFloat(lista[i]);
+                }
+                console.log(lista[i]);
                 if(!lista[i]){
                     alert("Solo numeros");
                     bandera2=0;
