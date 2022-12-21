@@ -1,6 +1,67 @@
-var n=2,m=2;
+var n=2,m=2
 // Definimos la matriz
 // Función para encontrar la matriz identidad
+function determinanteGauss (matriz) {
+    var resultadoM=document.getElementById("determinanteR")
+    // creamos una copia de la matriz
+    var A = matriz.slice();
+    console.log(A);
+    if(n!=m){
+        resultadoM.innerHTML='0';
+        return;
+    }
+    // inicializamos el resultado
+    var resultado = 1;
+    
+    // aplicamos la eliminación gaussiana
+    for (var i = 0; i < n; i++) {
+      // buscamos el elemento pivot
+      var pivot = A[i][i];
+      
+      // verificamos que el elemento pivot no sea cero
+      if (pivot == 0) {
+        // buscamos una fila que no tenga un cero como elemento pivot
+        for (var j = i + 1; j < n; j++) {
+          // verificamos si el elemento pivot es diferente de cero
+          if (A[j][i] != 0) {
+            // intercambiamos filas
+            var temp = A[i];
+            A[i] = A[j];
+            A[j] = temp;
+            // intercambiamos el operador
+            // cambiamos el signo del resultado
+            resultado *= -1;
+            // actualizamos el pivot
+            pivot = A[i][i];
+            break;
+          }
+        }
+        // verificamos que el elemento pivot no sea cero
+        if (pivot == 0) {
+            resultadoM.innerHTML="0";
+        }
+      }
+      
+      // normalizamos la fila
+      for (var j = 0; j < n; j++) {
+        A[i][j] /= pivot;
+      }
+      // multiplicamos el resultado por el pivot
+      resultado *= pivot;
+      
+      // hacemos cero los elementos de la columna
+      for (var j = 0; j < n; j++) {
+        if (j != i) {
+          var factor = A[j][i];
+          for (var k = 0; k < n; k++) {
+            A[j][k] -= A[i][k] * factor;
+          }
+        }
+      }
+    }
+    // devolvemos el resultado
+    resultadoM.innerHTML=resultado;
+  }
 function gaussJ(matriz) {
     var ban=0;
     var cont=0;
@@ -37,7 +98,7 @@ function gaussJ(matriz) {
         if(ban==0){
             for (let i = 0; i < n; i++) {
                 for (let j = 0; j < m; j++) {
-                    resultado[cont].innerHTML = matriz[i][j];
+                    resultado[cont].innerHTML = new Fraction(matriz[i][j]).toLatex();
                     //inversa[cont].innerHTML= identidad[i][j];
                     cont++;
                 }
@@ -68,8 +129,8 @@ function gaussJ(matriz) {
     }
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < m; j++) {
-            resultado[cont].innerHTML = matriz[i][j];
-            inversa[cont].innerHTML= identidad[i][j];
+            resultado[cont].innerHTML = new Fraction(matriz[i][j]).toLatex();
+            inversa[cont].innerHTML= new Fraction(identidad[i][j]).toLatex();
             cont++;
         }
     }
@@ -79,8 +140,10 @@ function gaussJ(matriz) {
 // Mostramos la matriz identidad
 function Calcular(){
     var matg=new Array();
+    var matd=new Array();
     var cont=0;
     var gauss=document.getElementsByName("Gauss Jordan");
+    console.log(gauss)
     for(var i=0;i<gauss.length;i++){
         gauss[i].removeAttribute("hidden");
     }
@@ -100,10 +163,13 @@ function Calcular(){
     for(var i=0;i<error.length;i++){
         //error[i].value=0;
     }
+    // [[1,2,3],[1,2,3],[2,3,4]]
     for(var i=0;i<n;i++){
         matg[i]=new Array();
+        matd[i]=new Array();
         for(var j=0;j<m;j++){
             matg[i][j]=document.getElementsByName("mat")[cont].value;
+            matd[i][j]=document.getElementsByName("mat")[cont].value;
             cont++;
         }
     }
@@ -111,8 +177,12 @@ function Calcular(){
     for(var i=0;i<n;i++){
         for(var j=0;j<m;j++){
             matg[i][j]=parseFloat(matg[i][j]);
+            matd[i][j]=parseFloat(matg[i][j]);
         }
     }
+    console.log(matg);
+    console.log(matd);
+    determinanteGauss(matd);
     gaussJ(matg);
 }
 
@@ -314,9 +384,9 @@ function soltar(evt){
         var contenido=evt.dataTransfer.items[0].getAsFile();
         var lectura= new FileReader();
         lectura.onload=function(){
-            console.log(lectura.result);
-            var filas = lectura.result.split(/\r?\n/);
+            var filas = lectura.result.trim().split(/\r?\n/);
             for(var i=0; i<filas.length; i++){
+                filas[i] = filas[i].trim().replaceAll(/\s{2,}/g," ")
                 if(filas[i]==""){
                     filas.splice(i,1);
                 }
@@ -341,7 +411,6 @@ function soltar(evt){
                 if(lista[i]!=0){
                     lista[i]=parseFloat(lista[i]);
                 }
-                console.log(lista[i]);
                 if(!lista[i]){
                     alert("Solo numeros");
                     bandera2=0;
