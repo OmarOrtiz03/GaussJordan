@@ -1,5 +1,14 @@
 var n=2,m=2
-// Definimos la matriz
+function mostrarGJ(){
+    var muestra=document.getElementsByName("matrices");
+    var esconde=document.getElementsByName("cambiobase");
+    for(var i=0;i<esconde.length;i++){
+        esconde[i].setAttribute("hidden",true);
+    }
+    for(var i=0;i<muestra.length;i++){
+        muestra[i].removeAttribute("hidden");
+    }
+}
 // Función para encontrar la matriz identidad
 function determinanteGauss (matriz) {
     var resultadoM=document.getElementById("determinanteR")
@@ -60,7 +69,8 @@ function determinanteGauss (matriz) {
       }
     }
     // devolvemos el resultado
-    resultadoM.innerHTML=resultado;
+    ;
+    resultadoM.innerHTML=new Fraction(resultado).toLatex();
   }
 function gaussJ(matriz) {
     var ban=0;
